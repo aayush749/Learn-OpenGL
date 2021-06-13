@@ -1,34 +1,14 @@
 #version 430
 
+in vec2 tc;	//interpolate incoming texture coordinate
 out vec4 color;
 
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 
-in vec4 varyingColor;
+layout(binding = 0) uniform sampler2D samp;
 
 void main(void)
 {
-	color = varyingColor;
+	color = texture(samp, tc);
 }
-
-//#version 430
-//
-//uniform float offset;
-//
-//out vec4 color; 
-//void main(void) 
-//{ 
-//	if (gl_FragCoord.x < 400) color = vec4(1.0 + offset, 0.0 + offset, 0.0 + offset, 1.0); else color = vec4(0.0 + offset, 0.0 + offset, 1.0 + offset, 1.0);
-//	//color = vec4(1.0, 1.0, 0.0, 1.0);
-//
-//	/*if (gl_VertexID == 0)
-//		color = vec4(1.0 + offset, 0.0 + offset, 0.0 + offset, 1);
-//
-//	if (gl_VertexID == 1)
-//		color = vec4(0.0 + offset, 1.0 + offset, 0.0 + offset, 1);
-//
-//	if (gl_VertexID == 2)
-//		color = vec4(0.0 + offset, 0.0 + offset, 1.0 + offset, 1);*/
-//
-//}
