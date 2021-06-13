@@ -80,6 +80,7 @@ void init(GLFWwindow* window)
 	cubeLocX = 0.0f; cubeLocY = 0.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
 	pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f;
 	setupVertices();
+	GLuint texture = Utils::LoadTexture("Textures/Brick.jpg");
 }
 
 void Display(GLFWwindow* window, double currentTime)

@@ -86,16 +86,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\SOIL2\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>soil2-debug.lib;gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,9 +104,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -114,24 +114,24 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\SOIL2\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>soil2-debug.lib;gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\SOIL2\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>soil2-debug.lib;gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,9 +140,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -150,14 +150,18 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)LOGL\src\vendor\GLFW\lib\;$(SolutionDir)LOGL\src\vendor\SOIL2\lib\;$(SolutionDir)LOGL\src\vendor\GLEW\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>soil2-debug.lib;gdi32.lib;opengl32.lib;glfw3.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\vendor\glm\glm\detail\glm.cpp" />
+    <ClCompile Include="src\vendor\SOIL2\SOIL2\image_DXT.c" />
+    <ClCompile Include="src\vendor\SOIL2\SOIL2\image_helper.c" />
+    <ClCompile Include="src\vendor\SOIL2\SOIL2\SOIL2.c" />
+    <ClCompile Include="src\vendor\SOIL2\SOIL2\wfETC.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragmentShader.shader" />
@@ -583,6 +587,23 @@
     <ClInclude Include="src\vendor\glm\vec3.hpp" />
     <ClInclude Include="src\vendor\glm\vec4.hpp" />
     <ClInclude Include="src\vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\image_DXT.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\image_helper.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\jo_jpeg.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\pkm_helper.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\pvr_helper.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\SOIL2.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_DDS.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_DDS_c.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_ext.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_ext_c.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_pkm.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_pkm_c.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_pvr.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stbi_pvr_c.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stb_image.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\stb_image_write.h" />
+    <ClInclude Include="src\vendor\SOIL2\SOIL2\wfETC.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

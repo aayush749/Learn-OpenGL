@@ -10,4 +10,5 @@ namespace Utils {
 	void getProgramLog(GLuint program);
 	bool checkOpenGLError();
 	GLuint CreateShaderProgram();
+	GLuint LoadTexture(const char* texImagePath);
 }
