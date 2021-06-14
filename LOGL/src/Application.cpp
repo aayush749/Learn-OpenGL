@@ -196,7 +196,7 @@ int main()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(1920, 1080, "Hello, World!", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "Hello, World!", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Could not create window!\n");
