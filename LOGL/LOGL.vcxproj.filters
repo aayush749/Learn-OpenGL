@@ -36,6 +36,9 @@
     <ClCompile Include="src\vendor\SOIL2\SOIL2\wfETC.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\vertexShader.shader" />
@@ -1348,6 +1351,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\SOIL2\SOIL2\wfETC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

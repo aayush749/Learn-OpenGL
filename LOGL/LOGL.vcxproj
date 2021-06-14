@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\vendor\glm\glm\detail\glm.cpp" />
@@ -304,6 +305,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
