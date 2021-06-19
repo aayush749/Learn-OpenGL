@@ -163,6 +163,7 @@
     <ClCompile Include="src\vendor\SOIL2\SOIL2\image_helper.c" />
     <ClCompile Include="src\vendor\SOIL2\SOIL2\SOIL2.c" />
     <ClCompile Include="src\vendor\SOIL2\SOIL2\wfETC.c" />
+    <ClCompile Include="src\Torus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragmentShader.shader" />
@@ -305,7 +306,6 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
@@ -607,6 +607,7 @@
     <ClInclude Include="src\vendor\SOIL2\SOIL2\stb_image.h" />
     <ClInclude Include="src\vendor\SOIL2\SOIL2\stb_image_write.h" />
     <ClInclude Include="src\vendor\SOIL2\SOIL2\wfETC.h" />
+    <ClInclude Include="src\Torus.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
