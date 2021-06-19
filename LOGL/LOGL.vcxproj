@@ -90,6 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,6 +109,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +128,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +147,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LOGL\src\vendor\SOIL2;$(SolutionDir)LOGL\src\vendor;$(SolutionDir)LOGL\src\vendor\GLEW;$(SolutionDir)LOGL\src\vendor\GLFW</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ImportedModel.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Utils.cpp" />
@@ -306,6 +311,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ImportedModel.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />

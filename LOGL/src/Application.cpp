@@ -15,6 +15,7 @@
 #include "Utils.h"
 #include "Sphere.h"
 #include "Torus.h"
+#include "ImportedModel.h"
 
 #define numVAOs 1
 #define numVBOs 4
@@ -40,44 +41,45 @@ GLuint mLoc, vLoc, tfLoc; //The uniform location for the model and view matrix a
 
 Sphere mySphere(48);
 Torus myTorus(0.5f, 0.2f, 48);
+ImportedModel myModel("Models/test_model.obj");
 
 void setupVertices(void) {
-	std::vector<int> ind = myTorus.getIndices();
-	std::vector<glm::vec3> vert = myTorus.getVertices();
-	std::vector<glm::vec2> tex = myTorus.getTexCoords();
-	std::vector<glm::vec3> norm = myTorus.getNormals();
-	std::vector<float> pvalues;
-	std::vector<float> tvalues;
-	std::vector<float> nvalues;
-	int numVertices = myTorus.getNumVertices();
-	for (int i = 0; i < numVertices; i++) {
-		pvalues.push_back(vert[i].x);
-		pvalues.push_back(vert[i].y);
-		pvalues.push_back(vert[i].z);
-		tvalues.push_back(tex[i].s);
-		tvalues.push_back(tex[i].t);
-		nvalues.push_back(norm[i].x);
-		nvalues.push_back(norm[i].y);
-		nvalues.push_back(norm[i].z);
+	std::vector<glm::vec3> vert = myModel.getVertices();
+	std::vector<glm::vec2> tex = myModel.getTextureCoords();
+	std::vector<glm::vec3> norm = myModel.getNormals();
+	int numObjVertices = myModel.getNumVertices();
+	std::vector<float> pvalues; // vertex positions
+	std::vector<float> tvalues; // texture coordinates
+	std::vector<float> nvalues; // normal vectors
+	for (int i = 0; i < numObjVertices; i++) {
+		pvalues.push_back((vert[i]).x);
+		pvalues.push_back((vert[i]).y);
+		pvalues.push_back((vert[i]).z);
+		tvalues.push_back((tex[i]).s);
+		tvalues.push_back((tex[i]).t);
+		nvalues.push_back((norm[i]).x);
+		nvalues.push_back((norm[i]).y);
+		nvalues.push_back((norm[i]).z);
 	}
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
-	glGenBuffers(4, vbo); // generate VBOs as before, plus one for indices
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // vertex positions
+	glGenBuffers(numVBOs, vbo);
+	// VBO for vertex locations
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // texture coordinates
+	// VBO for texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]); // normal vectors
+	// VBO for normal vectors
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]); // indices
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
 }
 
 
 void init(GLFWwindow* window) 
 {
 	renderingProgram = Utils::CreateShaderProgram();
-	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
+	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
 	setupVertices();
 	brickTexture = Utils::LoadTexture("Textures/Brick.jpg");
@@ -122,7 +124,7 @@ void Display(GLFWwindow* window, double currentTime)
 	glActiveTexture(GL_TEXTURE0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-	glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, myModel.getNumVertices());
 }
 
 int main()
