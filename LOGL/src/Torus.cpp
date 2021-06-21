@@ -8,13 +8,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
-Torus::Torus() {
+Torus::Torus() 
+{
 	prec = 48;
 	inner = 0.5f;
 	outer = 0.2f;
 	init();
 }
-Torus::Torus(float innerRadius, float outerRadius, int precIn) {
+Torus::Torus(float innerRadius, float outerRadius, int precIn) 
+{
 	prec = precIn;
 	inner = innerRadius;
 	outer = outerRadius;

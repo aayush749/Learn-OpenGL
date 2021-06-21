@@ -11,4 +11,21 @@ namespace Utils {
 	bool checkOpenGLError();
 	GLuint CreateShaderProgram();
 	GLuint LoadTexture(const char* texImagePath);
+
+
+	// GOLD material - ambient, diffuse, specular, and shininess
+	float* goldAmbient();
+	float* goldDiffuse();
+	float* goldSpecular();
+	float goldShininess();
+	// SILVER material - ambient, diffuse, specular, and shininess
+	float* silverAmbient();
+	float* silverDiffuse();
+	float* silverSpecular();
+	float silverShininess();
+	// BRONZE material - ambient, diffuse, specular, and shininess
+	float* bronzeAmbient();
+	float* bronzeDiffuse();
+	float* bronzeSpecular();
+	float bronzeShininess();
 }

@@ -13,7 +13,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Utils.h"
-#include "Sphere.h"
 #include "Torus.h"
 #include "ImportedModel.h"
 
@@ -30,59 +29,75 @@ float x = 0.0f;
 float increment = 0.01f;
 float tf; //time factor
 // allocate variables used in display() function, so that they won’t need to be allocated during rendering
-GLuint mvLoc, projLoc;
+GLuint mvLoc, projLoc, nLoc;
 int width, height;
 float aspect;
-glm::mat4 pMat, vMat, mMat, mvMat;
-GLuint brickTexture;
 
-
-GLuint mLoc, vLoc, tfLoc; //The uniform location for the model and view matrix and the time factor
-
-Sphere mySphere(48);
 Torus myTorus(0.5f, 0.2f, 48);
-ImportedModel myModel("Models/test_model2.obj");
 
-void setupVertices(void) {
-	std::vector<glm::vec3> vert = myModel.getVertices();
-	std::vector<glm::vec2> tex = myModel.getTextureCoords();
-	std::vector<glm::vec3> norm = myModel.getNormals();
-	int numObjVertices = myModel.getNumVertices();
-	std::vector<float> pvalues; // vertex positions
-	std::vector<float> tvalues; // texture coordinates
-	std::vector<float> nvalues; // normal vectors
-	for (int i = 0; i < numObjVertices; i++) {
-		pvalues.push_back((vert[i]).x);
-		pvalues.push_back((vert[i]).y);
-		pvalues.push_back((vert[i]).z);
-		tvalues.push_back((tex[i]).s);
-		tvalues.push_back((tex[i]).t);
-		nvalues.push_back((norm[i]).x);
-		nvalues.push_back((norm[i]).y);
-		nvalues.push_back((norm[i]).z);
+//Some initilizations to test the lighting (Gouraud)
+//Location for shader uniform variables
+GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mAmbLoc, mDiffLoc, mSpecLoc, mShiLoc;
+glm::mat4 pMat, vMat, mMat, mvMat, invTrMat;
+glm::vec3 currentLightPos, lightPosV; // light position as Vector3f, in both model and view space
+float lightPos[3]; // light position as float array
+// initial light location
+glm::vec3 initialLightLoc = glm::vec3(5.0f, 2.0f, 2.0f);
+// white light properties
+float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
+float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+// gold material properties
+float* matAmb = Utils::goldAmbient();
+float* matDif = Utils::goldDiffuse();
+float* matSpe = Utils::goldSpecular();
+float matShi = Utils::goldShininess();
+
+void InstallLights(const glm::mat4& vMat);
+
+void setupVertices(void) 
+{
+	std::vector<int> ind = myTorus.getIndices();
+	std::vector<glm::vec3> vert = myTorus.getVertices();
+	std::vector<glm::vec2> tex = myTorus.getTexCoords();
+	std::vector<glm::vec3> norm = myTorus.getNormals();
+	std::vector<float> pvalues;
+	std::vector<float> tvalues;
+	std::vector<float> nvalues;
+	int numVertices = myTorus.getNumVertices();
+	//Push the location coordinates, texture coordinates and normal vector values into corresponding vectors
+	for (int i = 0; i < numVertices; i++) 
+	{
+		pvalues.push_back(vert[i].x);
+		pvalues.push_back(vert[i].y);
+		pvalues.push_back(vert[i].z);
+		tvalues.push_back(tex[i].s);
+		tvalues.push_back(tex[i].t);
+		nvalues.push_back(norm[i].x);
+		nvalues.push_back(norm[i].y);
+		nvalues.push_back(norm[i].z);
 	}
-	glGenVertexArrays(1, vao);
+	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
-	glGenBuffers(numVBOs, vbo);
-	// VBO for vertex locations
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
-	// VBO for texture coordinates
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
-	// VBO for normal vectors
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
+	glGenBuffers(numVBOs, vbo); // generate VBOs as before, plus one for indices
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // vertex positions
+	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * sizeof(float), &pvalues[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // texture coordinates
+	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * sizeof(float), &tvalues[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]); // normal vectors
+	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * sizeof(float), &nvalues[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]); // indices
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(float), &ind[0], GL_STATIC_DRAW);
 }
 
 
 void init(GLFWwindow* window) 
 {
 	renderingProgram = Utils::CreateShaderProgram();
-	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
+	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
 	setupVertices();
-	brickTexture = Utils::LoadTexture("Textures/Brick.jpg");
 }
 
 void Display(GLFWwindow* window, double currentTime)
@@ -94,6 +109,7 @@ void Display(GLFWwindow* window, double currentTime)
 	// get the uniform variables for the MV and projection matrices
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 
 	// build perspective matrix
 	glfwGetFramebufferSize(window, &width, &height);
@@ -104,27 +120,71 @@ void Display(GLFWwindow* window, double currentTime)
 	// pass on the view matrix and the model matrix for the pyramid (after applying some rotation and scale transforms)
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torusLocX, torusLocY, torusLocZ));
-	mMat *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 1.0f, 1.0f));
+	
+	//rotate the torus to make it easier to see
+	mMat *= glm::rotate(glm::mat4(1.0f), float(currentTime), glm::vec3(1.0f, 1.0f, 1.0f));
 
+	//Setup lights based on the current light positions
+	currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
+	InstallLights(vMat);
+
+	//Now build the model view matrices by concatenating the view and the model matrices
 	mvMat = vMat * mMat;
+	
+	//build the inverse transpose of the MV matrix for transforming normal vectors
+	invTrMat = glm::transpose(glm::inverse(mvMat));
+	
+	//Put the mv, inverseTranspose (normal) and proj matrices into the corresponding uniforms
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
+	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 
+	// bind the vertices buffer (VBO #0) to vertex attribute #0 in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+	glEnableVertexAttribArray(0);
+	// bind the normals buffer (in VBO #2) to vertex attribute #1 in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+	glEnableVertexAttribArray(1);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	glBindTexture(GL_TEXTURE_2D, brickTexture);
-	glActiveTexture(GL_TEXTURE0);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-	glDrawArrays(GL_TRIANGLES, 0, myModel.getNumVertices());
+	glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
+}
+
+
+void InstallLights(const glm::mat4& vMat)
+{
+	//Convert light's position into viewspace and store it in a float array
+	lightPosV = glm::vec3(vMat * glm::vec4(currentLightPos, 1.0));
+	lightPos[0] = lightPosV.x;
+	lightPos[1] = lightPosV.y;
+	lightPos[2] = lightPosV.z;
+
+	//Get the location of the lights and the material fields in the shader
+	globalAmbLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
+	ambLoc = glGetUniformLocation(renderingProgram, "light.ambient");
+	diffLoc = glGetUniformLocation(renderingProgram, "light.diffuse");
+	specLoc = glGetUniformLocation(renderingProgram, "light.specular");
+	posLoc = glGetUniformLocation(renderingProgram, "light.position");
+	mAmbLoc = glGetUniformLocation(renderingProgram, "material.ambient");
+	mDiffLoc = glGetUniformLocation(renderingProgram, "material.diffuse");
+	mSpecLoc = glGetUniformLocation(renderingProgram, "material.specular");
+	mShiLoc = glGetUniformLocation(renderingProgram, "material.shininess");
+
+	// set the uniform light and material values in the shader
+	glProgramUniform4fv(renderingProgram, globalAmbLoc, 1, globalAmbient);
+	glProgramUniform4fv(renderingProgram, ambLoc, 1, lightAmbient);
+	glProgramUniform4fv(renderingProgram, diffLoc, 1, lightDiffuse);
+	glProgramUniform4fv(renderingProgram, specLoc, 1, lightSpecular);
+	glProgramUniform3fv(renderingProgram, posLoc, 1, lightPos);
+	glProgramUniform4fv(renderingProgram, mAmbLoc, 1, matAmb);
+	glProgramUniform4fv(renderingProgram, mDiffLoc, 1, matDif);
+	glProgramUniform4fv(renderingProgram, mSpecLoc, 1, matSpe);
+	glProgramUniform1f(renderingProgram, mShiLoc, matShi);
 }
 
 int main()
