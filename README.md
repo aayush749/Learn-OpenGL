@@ -6,6 +6,9 @@ This is a repository where I track the progress of me learning OpenGL.
 
 Here are some screenshots from what I have tried so far
 
+**Suzanne-The monkey (3D model viewer)**
+![Suzanne](LOGL/Screenshots/3D%20model%20loaded%20with%20lighting.jpg?raw=true "Suzanne")
+
 **Solar System**
 
 
