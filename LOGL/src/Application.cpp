@@ -17,7 +17,7 @@
 #include "ImportedModel.h"
 
 #define numVAOs 1
-#define numVBOs 3
+#define numVBOs 4
 
 float cameraX, cameraY, cameraZ;
 float cubeLocX, cubeLocY, cubeLocZ;
@@ -33,7 +33,8 @@ GLuint mvLoc, projLoc, nLoc;
 int width, height;
 float aspect;
 
-ImportedModel model("Models/Suzanne.obj");
+float deltaX = 0.1f;
+
 Torus myTorus(0.5f, 0.2f, 48);
 
 //Some initilizations to test the lighting (Gouraud)
@@ -49,23 +50,24 @@ float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// silver material properties
-float* matAmb = Utils::silverAmbient();
-float* matDif = Utils::silverDiffuse();
-float* matSpe = Utils::silverSpecular();
-float matShi = Utils::silverShininess();
+// gold material properties
+float* matAmb = Utils::goldAmbient();
+float* matDif = Utils::goldDiffuse();
+float* matSpe = Utils::goldSpecular();
+float matShi = Utils::goldShininess();
 
 void InstallLights(const glm::mat4& vMat);
 
 void setupVertices(void) 
 {
-	std::vector<glm::vec3> vert = model.getVertices();
-	std::vector<glm::vec2> tex = model.getTextureCoords();
-	std::vector<glm::vec3> norm = model.getNormals();
+	std::vector<glm::vec3> vert = myTorus.getVertices();
+	std::vector<glm::vec2> tex = myTorus.getTexCoords();
+	std::vector<glm::vec3> norm = myTorus.getNormals();
+	std::vector<int> indices = myTorus.getIndices();
 	std::vector<float> pvalues;
 	std::vector<float> tvalues;
 	std::vector<float> nvalues;
-	int numVertices = model.getNumVertices();
+	int numVertices = myTorus.getNumVertices();
 	//Push the location coordinates, texture coordinates and normal vector values into corresponding vectors
 	for (int i = 0; i < numVertices; i++) 
 	{
@@ -83,17 +85,21 @@ void setupVertices(void)
 	glGenBuffers(numVBOs, vbo); // generate VBOs as before, plus one for indices
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // vertex positions
 	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * sizeof(float), &pvalues[0], GL_STATIC_DRAW);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // texture coordinates
 	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * sizeof(float), &tvalues[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]); // normal vectors
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * sizeof(float), &nvalues[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), &indices[0], GL_STATIC_DRAW);
 }
 
 
 void init(GLFWwindow* window) 
 {
 	renderingProgram = Utils::CreateShaderProgram();
-	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
+	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
 	setupVertices();
 }
@@ -120,7 +126,7 @@ void Display(GLFWwindow* window, double currentTime)
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torusLocX, torusLocY, torusLocZ));
 	
 	//rotate the torus to make it easier to see
-	mMat *= glm::rotate(glm::mat4(1.0f), float(currentTime), glm::vec3(1.0f, 1.0f, 1.0f));
+	mMat *= glm::rotate(glm::mat4(1.0f), glm::radians(35.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	//Setup lights based on the current light positions
 	currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
@@ -149,8 +155,8 @@ void Display(GLFWwindow* window, double currentTime)
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glDrawArrays(GL_TRIANGLES, 0, model.getNumVertices());
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
+	glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
 }
 
 
@@ -192,7 +198,7 @@ int main()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(640, 480, "Hello, World!", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "Hello, World!", NULL, NULL);
 	if (window == NULL)
 	{
 		fprintf(stderr, "Could not create window!\n");
@@ -213,8 +219,11 @@ int main()
 	printf("Vendor Info:%s\n", glGetString(GL_VENDOR));
 	printf("Version: %s\n", glGetString(GL_VERSION));
 
+	glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 		Display(window, glfwGetTime());
 		glfwPollEvents();
 		glfwSwapBuffers(window);
