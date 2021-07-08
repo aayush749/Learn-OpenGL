@@ -2,6 +2,7 @@
 in vec3 varyingVertPos;
 in vec3 varyingLightDir;
 in vec3 varyingNormal;
+in vec3 varyingHalfVector;
 
 out vec4 fragColor;
 
@@ -34,14 +35,14 @@ void main(void)
 	vec3 N = normalize(varyingNormal);
 	vec3 V = normalize(-varyingVertPos);
 
-	//compute light reflection vector with respect to varying normal vector
-	vec3 R = reflect(-L, N);
+	////compute light reflection vector with respect to varying normal vector
+	//vec3 R = reflect(-L, N);
 
 	//get the angle between light and surface normal
 	float cosTheta = dot(L, N);
 
 	//get the angle between view vector and reflected light
-	float cosPhi = dot(V, R);
+	float cosPhi = dot(varyingHalfVector, N);
 
 	//Calculate ADS contribution (per pixel) and add the contributions to get the output color
 	vec3 ambient = (globalAmbient * material.ambient + light.ambient * material.ambient).xyz;
