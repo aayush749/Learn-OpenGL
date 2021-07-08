@@ -171,8 +171,12 @@
     <ClCompile Include="src\Torus.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragmentShader.shader" />
-    <None Include="shaders\vertexShader.shader" />
+    <None Include="shaders\blinn-phong_f.shader" />
+    <None Include="shaders\gouraud_f.shader" />
+    <None Include="shaders\gouraud_v.shader" />
+    <None Include="shaders\phong_f.shader" />
+    <None Include="shaders\phong_v.shader" />
+    <None Include="shaders\blinn-phong_v.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />

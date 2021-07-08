@@ -63,11 +63,11 @@ namespace Utils {
 		return foundError;
 	}
 
-	GLuint CreateShaderProgram()
+	GLuint CreateShaderProgram(const char* vertexShaderFilePath, const char* fragmentShaderFilePath)
 	{
 		std::string vShaderString, fShaderString;
-		readShader("shaders/vertexShader.shader", vShaderString);
-		readShader("shaders/fragmentShader.shader", fShaderString);
+		readShader(vertexShaderFilePath, vShaderString);
+		readShader(fragmentShaderFilePath, fShaderString);
 
 		GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 		getShaderLog(vShader);

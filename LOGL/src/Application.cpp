@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <stack>
+#include <filesystem>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -37,6 +38,9 @@ float deltaX = 0.1f;
 
 Torus myTorus(0.5f, 0.2f, 48);
 
+//Vector of all shader programs
+std::vector<GLuint> shaderPrograms;
+
 //Some initilizations to test the lighting (Gouraud)
 //Location for shader uniform variables
 GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mAmbLoc, mDiffLoc, mSpecLoc, mShiLoc;
@@ -57,6 +61,31 @@ float* matSpe = Utils::goldSpecular();
 float matShi = Utils::goldShininess();
 
 void InstallLights(const glm::mat4& vMat);
+
+enum class Input
+{
+	LEFT, RIGHT
+};
+
+unsigned int currentShaderIndex;
+
+void ManageInput(GLFWwindow*, int, int, int, int);
+
+void ReTargetShader(Input ip)
+{
+	if (ip == Input::LEFT && currentShaderIndex != 0)
+	{
+		currentShaderIndex--;
+	}
+
+	else if (ip == Input::RIGHT && currentShaderIndex != shaderPrograms.size() - 1)
+	{
+		currentShaderIndex++;
+	}
+
+	//after setting the current shader model, use that shader
+	renderingProgram = shaderPrograms[currentShaderIndex];
+}
 
 void setupVertices(void) 
 {
@@ -98,7 +127,21 @@ void setupVertices(void)
 
 void init(GLFWwindow* window) 
 {
-	renderingProgram = Utils::CreateShaderProgram();
+	//Compile and load all the shaders in the shaderPrograms vector
+	std::vector<std::string> filenames;
+	for (auto& file : std::filesystem::directory_iterator("shaders"))
+	{
+		filenames.push_back("shaders/" + file.path().stem().string() + ".shader");
+	}
+	
+	for (int i = 1; i < filenames.size(); i += 2)
+	{
+		GLuint shaderProgram = Utils::CreateShaderProgram(filenames[i].c_str(), filenames[i - 1].c_str());
+		shaderPrograms.push_back(shaderProgram);
+	}
+
+	currentShaderIndex = 0;
+	renderingProgram = shaderPrograms[currentShaderIndex];
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
 	setupVertices();
@@ -221,6 +264,8 @@ int main()
 
 	glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 
+	//Set input callback for retargeting the current shader
+	glfwSetKeyCallback(window, ManageInput);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -233,4 +278,14 @@ int main()
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
 	return 0;
+}
+
+//For managing input
+void ManageInput(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		ReTargetShader(Input::LEFT);
+
+	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+		ReTargetShader(Input::RIGHT);
 }
