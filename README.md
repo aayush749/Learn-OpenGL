@@ -6,6 +6,13 @@ This is a repository where I track the progress of me learning OpenGL.
 
 Here are some screenshots from what I have tried so far
 
+**ADS Lighting - Types of Smooth Shading**
+
+
+https://user-images.githubusercontent.com/62141759/124979619-e80b6b00-e050-11eb-840e-805b21c18eeb.mp4
+
+
+
 **Suzanne-The monkey (3D model viewer)**
 ![Suzanne](LOGL/Screenshots/3D%20model%20loaded%20with%20lighting.jpg?raw=true "Suzanne")
 
