@@ -2,6 +2,15 @@
 #include <SOIL2/SOIL2.h>
 
 #include <iostream>
+#include <vector>
+
+enum class Input
+{
+	LEFT, RIGHT
+};
+
+extern GLuint currentShaderIndex, renderingProgram;
+extern std::vector<GLuint> shaderPrograms;
 
 namespace Utils {
 	void readShader(const char* filepath, std::string& string)
@@ -127,4 +136,31 @@ namespace Utils {
 	float* bronzeDiffuse() { static float a[4] = { 0.7140f, 0.4284f, 0.1814f, 1 }; return (float*)a; }
 	float* bronzeSpecular() { static float a[4] = { 0.3936f, 0.2719f, 0.1667f, 1 }; return (float*)a; }
 	float bronzeShininess() { return 25.6f; }
+
+	static void ReTargetShader(Input ip)
+	{
+		if (ip == Input::LEFT && currentShaderIndex != 0)
+		{
+			currentShaderIndex--;
+		}
+
+		else if (ip == Input::RIGHT && currentShaderIndex != shaderPrograms.size() - 1)
+		{
+			currentShaderIndex++;
+		}
+
+		//after setting the current shader model, use that shader
+		renderingProgram = shaderPrograms[currentShaderIndex];
+	}
+
+	//For managing input
+	void ManageInput(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+			ReTargetShader(Input::LEFT);
+
+		if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+			ReTargetShader(Input::RIGHT);
+	}
+
 }

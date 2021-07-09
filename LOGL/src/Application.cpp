@@ -51,7 +51,7 @@ float lightPos[3]; // light position as float array
 // initial light location
 glm::vec3 initialLightLoc = glm::vec3(5.0f, 2.0f, 2.0f);
 // white light properties
-float globalAmbient[4] = { 1.7f, 1.7f, 1.7f, 1.0f };
+float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 0.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -63,30 +63,11 @@ float matShi = Utils::silverShininess();
 
 void InstallLights(const glm::mat4& vMat);
 
-enum class Input
-{
-	LEFT, RIGHT
-};
+
 
 unsigned int currentShaderIndex;
 
 void ManageInput(GLFWwindow*, int, int, int, int);
-
-void ReTargetShader(Input ip)
-{
-	if (ip == Input::LEFT && currentShaderIndex != 0)
-	{
-		currentShaderIndex--;
-	}
-
-	else if (ip == Input::RIGHT && currentShaderIndex != shaderPrograms.size() - 1)
-	{
-		currentShaderIndex++;
-	}
-
-	//after setting the current shader model, use that shader
-	renderingProgram = shaderPrograms[currentShaderIndex];
-}
 
 void setupVertices(void) 
 {
@@ -147,7 +128,7 @@ void init(GLFWwindow* window)
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
 
 	//Load the texture
-	currentTextureID = Utils::LoadTexture("Textures/Moon.jpg");
+	currentTextureID = Utils::LoadTexture("Textures/Brick.jpg");
 	setupVertices();
 }
 
@@ -276,7 +257,7 @@ int main()
 	glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
 
 	//Set input callback for retargeting the current shader
-	glfwSetKeyCallback(window, ManageInput);
+	glfwSetKeyCallback(window, Utils::ManageInput);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -289,14 +270,4 @@ int main()
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
 	return 0;
-}
-
-//For managing input
-void ManageInput(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		ReTargetShader(Input::LEFT);
-
-	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		ReTargetShader(Input::RIGHT);
 }

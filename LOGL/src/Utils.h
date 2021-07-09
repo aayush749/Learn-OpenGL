@@ -3,6 +3,7 @@
 #include <string>
 
 #include "GL/glew.h"
+#include <GLFW/glfw3.h>
 
 namespace Utils {
 	void readShader(const char* filepath, std::string& string);
@@ -28,4 +29,7 @@ namespace Utils {
 	float* bronzeDiffuse();
 	float* bronzeSpecular();
 	float bronzeShininess();
+
+	//For managing input
+	void ManageInput(GLFWwindow* window, int key, int scancode, int action, int mods);
 }
