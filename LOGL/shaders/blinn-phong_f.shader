@@ -3,8 +3,10 @@ in vec3 varyingVertPos;
 in vec3 varyingLightDir;
 in vec3 varyingNormal;
 in vec3 varyingHalfVector;
-
+in vec2 tc; //for texture coordinates
 out vec4 fragColor;
+
+layout(binding = 0) uniform sampler2D samp;
 
 struct PositionalLight
 {
@@ -49,5 +51,8 @@ void main(void)
 	vec3 diffuse = (light.diffuse.xyz * material.diffuse.xyz * max(cosTheta, 0.0f));
 	vec3 specular = (light.specular.xyz * material.specular.xyz * pow(max(cosPhi, 0.0f), material.shininess));
 
-	fragColor = vec4((ambient + diffuse + specular), 1.0f);
+
+	//sample the texture to get its color contribution
+	vec4 tex_col = texture(samp, tc);	//sample at texCoord tc => gives you the color value as a vec4
+	fragColor = tex_col * vec4(ambient + diffuse, 1.0f) + vec4(specular, 1.0f);
 }

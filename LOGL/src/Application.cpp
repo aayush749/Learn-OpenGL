@@ -23,9 +23,10 @@
 float cameraX, cameraY, cameraZ;
 float cubeLocX, cubeLocY, cubeLocZ;
 float torusLocX, torusLocY, torusLocZ;
-GLuint renderingProgram;
+GLuint renderingProgram;	//the current shader program used to render (is chosen per frame)
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
+GLuint currentTextureID;
 float x = 0.0f;
 float increment = 0.01f;
 float tf; //time factor
@@ -50,15 +51,15 @@ float lightPos[3]; // light position as float array
 // initial light location
 glm::vec3 initialLightLoc = glm::vec3(5.0f, 2.0f, 2.0f);
 // white light properties
-float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
+float globalAmbient[4] = { 1.7f, 1.7f, 1.7f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-// gold material properties
-float* matAmb = Utils::goldAmbient();
-float* matDif = Utils::goldDiffuse();
-float* matSpe = Utils::goldSpecular();
-float matShi = Utils::goldShininess();
+// silver material properties
+float* matAmb = Utils::silverAmbient();
+float* matDif = Utils::silverDiffuse();
+float* matSpe = Utils::silverSpecular();
+float matShi = Utils::silverShininess();
 
 void InstallLights(const glm::mat4& vMat);
 
@@ -144,6 +145,9 @@ void init(GLFWwindow* window)
 	renderingProgram = shaderPrograms[currentShaderIndex];
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
 	torusLocX = 0.0f; torusLocY = 0.0f; torusLocZ = 0.0f;
+
+	//Load the texture
+	currentTextureID = Utils::LoadTexture("Textures/Moon.jpg");
 	setupVertices();
 }
 
@@ -169,10 +173,10 @@ void Display(GLFWwindow* window, double currentTime)
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torusLocX, torusLocY, torusLocZ));
 	
 	//rotate the torus to make it easier to see
-	mMat *= glm::rotate(glm::mat4(1.0f), glm::radians(35.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat *= glm::rotate(glm::mat4(1.0f), (float) currentTime, glm::vec3(1.0f, 1.0f, 0.0f));
 
 	//Setup lights based on the current light positions
-	currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
+	currentLightPos = glm::vec3(initialLightLoc.x- (float) currentTime, initialLightLoc.y , initialLightLoc.z);
 	InstallLights(vMat);
 
 	//Now build the model view matrices by concatenating the view and the model matrices
@@ -194,6 +198,13 @@ void Display(GLFWwindow* window, double currentTime)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
 	glEnableVertexAttribArray(1);
+	//bind the texture coordinate buffer (VBO #1) to vertex attribute #2 in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+	glEnableVertexAttribArray(2);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, currentTextureID);
+
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
