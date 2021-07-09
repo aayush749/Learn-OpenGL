@@ -3,6 +3,8 @@
 in vec4 varyingColor;
 out vec4 fragColor;
 
+in vec2 tc;
+
 struct PositionalLight
 {
 	vec4 ambient;
@@ -19,6 +21,8 @@ struct Material
 	float shininess;
 };
 
+layout(binding = 0) uniform sampler2D samp;
+
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -28,5 +32,6 @@ uniform mat4 norm_matrix;
 
 void main(void)
 {
-	fragColor = varyingColor;
+	vec4 tex_color = texture(samp, tc);
+	fragColor = tex_color * varyingColor;
 }

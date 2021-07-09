@@ -2,7 +2,7 @@
 in vec3 varyingVertPos;
 in vec3 varyingLightDir;
 in vec3 varyingNormal;
-
+in vec2 tc;
 out vec4 fragColor;
 
 struct PositionalLight
@@ -21,6 +21,7 @@ struct Material
 	float shininess;
 };
 
+layout(binding = 0) uniform sampler2D samp;
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -48,5 +49,6 @@ void main(void)
 	vec3 diffuse = (light.diffuse.xyz * material.diffuse.xyz * max(cosTheta, 0.0f));
 	vec3 specular = (light.specular.xyz * material.specular.xyz * pow(max(cosPhi, 0.0f), material.shininess));
 
-	fragColor = vec4((ambient + diffuse + specular), 1.0f);
+	vec4 texSampledColor = texture(samp, tc); // sample the color using the sampler from the texture coordinate 'tc'
+	fragColor = texSampledColor * vec4(ambient + diffuse, 1.0f) + vec4(specular, 1.0f);
 }

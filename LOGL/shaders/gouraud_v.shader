@@ -1,6 +1,8 @@
 #version 430
 layout (location = 0) in vec3 vertPos;
 layout (location = 1) in vec3 vertNormal;
+layout(location = 2) in vec2 texCoords;
+out vec2 tc;
 
 out vec4 varyingColor;
 
@@ -20,6 +22,8 @@ struct Material
 	float shininess;
 };
 
+layout(binding = 0) uniform sampler2D samp;
+
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -30,25 +34,6 @@ uniform mat4 norm_matrix;
 
 void main(void)
 {
-	//vec3 P = (mv_matrix * mat4(vertPos, 1.0f)).xyz;
-	//
-	//vec3 L = normalize(light.position - P);
-	//vec3 N = normalize((norm_matrix * vec4(vertNormal, 1.0f)).xyz);
-	//vec3 V = normalize(-P);
-
-	//vec3 R = reflect(-L, N);
-	////Calculate cosTheta and cosPhi
-	//float cosTheta = dot(L, N);
-	//float cosPhi = dot(V, R);
-
-	////Calculate ADS lighting
-	//vec3 ambient = (globalAmbient * material.ambient + globalAmbient * light.ambient).xyz;
-	//vec3 diffuse = light.diffuse.xyz * material.diffuse.xyz * max(cosTheta, 0.0f);
-	//vec3 specular = light.specular.xyz * material.specular.xyz * pow(max(cosPhi, 0.0f), material.shininess);
-
-	//varyingColor = vec4((ambient + diffuse + specular), 1.0f);
-	//gl_Position = proj_matrix * mv_matrix * vec4(vertPos, 1.0f);
-
 	// convert vertex position to view space,
 // convert normal to view space, and
 // calculate view space light vector (from vertex to light)
@@ -68,4 +53,7 @@ void main(void)
 	varyingColor = vec4((ambient + diffuse + specular), 1.0);
 	// send the position to the fragment shader, as before
 	gl_Position = proj_matrix * mv_matrix * vec4(vertPos, 1.0);
+
+	//set the out tc variable for fragment shader
+	tc = texCoords;
 }
