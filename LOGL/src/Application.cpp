@@ -69,6 +69,8 @@ unsigned int currentShaderIndex;
 
 void ManageInput(GLFWwindow*, int, int, int, int);
 
+void ResizeWindowCallback(GLFWwindow*, int, int);
+
 void setupVertices(void) 
 {
 	std::vector<glm::vec3> vert = myTorus.getVertices();
@@ -104,6 +106,7 @@ void setupVertices(void)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), &indices[0], GL_STATIC_DRAW);
+
 }
 
 
@@ -130,6 +133,11 @@ void init(GLFWwindow* window)
 	//Load the texture
 	currentTextureID = Utils::LoadTexture("Textures/Brick.jpg");
 	setupVertices();
+
+	//Set the projection matrix for the first time (it will only be re-calculated when the window resizes)
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 }
 
 void Display(GLFWwindow* window, double currentTime)
@@ -144,9 +152,6 @@ void Display(GLFWwindow* window, double currentTime)
 	nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 
 	// build perspective matrix
-	glfwGetFramebufferSize(window, &width, &height);
-	aspect = (float)width / (float)height;
-	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 
 	// pass on the view matrix and the model matrix for the pyramid (after applying some rotation and scale transforms)
@@ -192,6 +197,7 @@ void Display(GLFWwindow* window, double currentTime)
 	glDepthFunc(GL_LEQUAL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 	glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
+
 }
 
 
@@ -247,6 +253,7 @@ int main()
 
 	glfwSwapInterval(1);
 
+	glfwSetWindowSizeCallback(window, ResizeWindowCallback);
 
 	init(window);
 
@@ -270,4 +277,13 @@ int main()
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
 	return 0;
+}
+
+void ResizeWindowCallback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 }

@@ -92,8 +92,10 @@ namespace Utils {
 		glShaderSource(fShader, 1, &fShaderSource, NULL);
 
 		glCompileShader(vShader);
+		getShaderLog(fShader);
 
 		glCompileShader(fShader);
+		getShaderLog(fShader);
 
 
 		GLuint vfProgram = glCreateProgram();
