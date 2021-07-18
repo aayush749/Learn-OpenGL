@@ -6,7 +6,7 @@ in vec3 varyingHalfVector;
 in vec2 tc; //for texture coordinates
 out vec4 fragColor;
 
-layout(binding = 0) uniform sampler2D samp;
+layout(binding = 1) uniform sampler2D samp;
 
 struct PositionalLight
 {

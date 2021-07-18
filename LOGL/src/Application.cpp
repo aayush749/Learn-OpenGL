@@ -249,7 +249,7 @@ void Display(GLFWwindow* window, double currentTime)
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[6]);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, planeTexture);
 	glEnableVertexAttribArray(2);
 

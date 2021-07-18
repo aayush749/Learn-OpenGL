@@ -25,7 +25,7 @@ struct Material
 };
 
 //uniform sampler variable for texturing
-layout(binding = 0) uniform sampler2D samp; //not used in vertex shader
+layout(binding = 1) uniform sampler2D samp; //not used in vertex shader
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
