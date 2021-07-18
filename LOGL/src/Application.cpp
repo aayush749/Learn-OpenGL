@@ -18,7 +18,7 @@
 #include "ImportedModel.h"
 
 #define numVAOs 1
-#define numVBOs 4
+#define numVBOs 7
 
 float cameraX, cameraY, cameraZ;
 float cubeLocX, cubeLocY, cubeLocZ;
@@ -71,6 +71,9 @@ void ManageInput(GLFWwindow*, int, int, int, int);
 
 void ResizeWindowCallback(GLFWwindow*, int, int);
 
+std::stack<glm::mat4> mvStack;
+GLuint planeTexture;
+
 void setupVertices(void) 
 {
 	std::vector<glm::vec3> vert = myTorus.getVertices();
@@ -107,6 +110,33 @@ void setupVertices(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), &indices[0], GL_STATIC_DRAW);
 
+
+	float verts[] = {
+		-10.0f, -0.5f, 10.0f,
+		-10.0f, 0.2f, -10.0f,
+		10.0f, 0.2f, -10.0f,
+		10.0f, -0.5, 10.0f
+	};
+
+	GLuint inds[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	float tC[] = {
+		0.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[5]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(inds), inds, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[6]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(tC), tC, GL_STATIC_DRAW);
 }
 
 
@@ -132,12 +162,14 @@ void init(GLFWwindow* window)
 
 	//Load the texture
 	currentTextureID = Utils::LoadTexture("Textures/Brick.jpg");
+	planeTexture = Utils::LoadTexture("Textures/Moon.jpg");
 	setupVertices();
 
 	//Set the projection matrix for the first time (it will only be re-calculated when the window resizes)
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+	pMat *= glm::rotate(glm::mat4(1.0f), glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void Display(GLFWwindow* window, double currentTime)
@@ -156,10 +188,12 @@ void Display(GLFWwindow* window, double currentTime)
 
 	// pass on the view matrix and the model matrix for the pyramid (after applying some rotation and scale transforms)
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
+	vMat *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.511f, -3.511f));
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torusLocX, torusLocY, torusLocZ));
 	
 	//rotate the torus to make it easier to see
-	mMat *= glm::rotate(glm::mat4(1.0f), (float) currentTime, glm::vec3(1.0f, 1.0f, 0.0f));
+	mvStack.push(mMat);
+	//mMat *= glm::rotate(glm::mat4(1.0f), (float) currentTime, glm::vec3(1.0f, 1.0f, 0.0f));
 
 	//Setup lights based on the current light positions
 	currentLightPos = glm::vec3(initialLightLoc.x- (float) currentTime, initialLightLoc.y , initialLightLoc.z);
@@ -197,6 +231,31 @@ void Display(GLFWwindow* window, double currentTime)
 	glDepthFunc(GL_LEQUAL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 	glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
+
+		
+	//Drawing the plane
+
+	mvStack.top() *= vMat;
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
+	mvStack.pop();
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CW);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[6]);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, planeTexture);
+	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[5]);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
 
 }
 
