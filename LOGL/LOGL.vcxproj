@@ -177,6 +177,10 @@
     <None Include="shaders\phong_f.shader" />
     <None Include="shaders\phong_v.shader" />
     <None Include="shaders\blinn-phong_v.shader" />
+    <None Include="shaders\shadow_pass2_f.shader" />
+    <None Include="shaders\shadow_pass2_v.shader" />
+    <None Include="shaders\shadow_pass1_f.shader" />
+    <None Include="shaders\shadow_pass1_v.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />

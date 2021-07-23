@@ -461,6 +461,10 @@
     <None Include="shaders\phong_f.shader" />
     <None Include="shaders\gouraud_v.shader" />
     <None Include="shaders\gouraud_f.shader" />
+    <None Include="shaders\shadow_pass2_v.shader" />
+    <None Include="shaders\shadow_pass2_f.shader" />
+    <None Include="shaders\shadow_pass1_v.shader" />
+    <None Include="shaders\shadow_pass1_f.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Utils.h">
