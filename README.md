@@ -6,7 +6,7 @@ This is a repository where I track the progress of me learning OpenGL.
 
 Here are some screenshots from what I have tried so far
 
-**Shadow Mapping and Shadow Mapping with PCF for soft shadows)**
+**Shadow Mapping and Shadow Mapping with PCF (for soft shadows)**
 ![Shadow Mapping and with PCF-gif](https://user-images.githubusercontent.com/62141759/127845593-3fb0c0ce-471b-4906-a104-8682b7f5d2be.gif)
 
 
